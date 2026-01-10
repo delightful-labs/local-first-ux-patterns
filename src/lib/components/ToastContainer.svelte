@@ -1,30 +1,25 @@
 <script lang="ts">
-	import { getToastMachineActor } from '$lib/stores/toastStore';
-	import Toast from './Toast.svelte';
-	import { browser } from '$app/environment';
+	import { getToastMachineActor } from '$lib/stores/toastStore'
+	import Toast from './Toast.svelte'
 
-	const actor = getToastMachineActor();
-	let snapshot = $state(actor.getSnapshot());
+	const actor = getToastMachineActor()
+	let snapshot = $state(actor.getSnapshot())
 
-	if (browser) {
-		$effect(() => {
-			const unsubscribe = actor.subscribe((newSnapshot) => {
-				snapshot = newSnapshot;
-			});
-			return unsubscribe;
-		});
-	}
+	$effect(() => {
+		const unsubscribe = actor.subscribe((newSnapshot) => {
+			snapshot = newSnapshot
+		})
+		return unsubscribe
+	})
 
-	const toasts = $derived(
-		snapshot?.context ? Array.from(snapshot.context.toasts.entries()) : []
-	);
+	const toasts = $derived(snapshot?.context ? Array.from(snapshot.context.toasts.entries()) : [])
 </script>
 
-<div class="toast-container">
+<ul class="toast-container" aria-live="polite">
 	{#each toasts as [id, toastActor]}
 		<Toast actor={toastActor} />
 	{/each}
-</div>
+</ul>
 
 <style>
 	.toast-container {
@@ -43,4 +38,3 @@
 		pointer-events: auto;
 	}
 </style>
-

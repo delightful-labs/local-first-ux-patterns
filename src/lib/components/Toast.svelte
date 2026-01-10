@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ActorRefFrom } from 'xstate';
-	import type { toastChildMachine } from '$lib/machines/toastMachine';
+	import type { toastChildMachine } from '$lib/machines/toastMachine'
 	import { browser } from '$app/environment';
 
 	interface Props {
@@ -57,7 +57,7 @@
 </script>
 
 {#if currentState !== 'removed' && context}
-	<div
+	<li
 		class={toastClass}
 		role="alert"
 		aria-live="polite"
@@ -70,7 +70,7 @@
 		<button class="toast-dismiss" onclick={handleDismiss} aria-label="Dismiss">
 			×
 		</button>
-	</div>
+	</li>
 {/if}
 
 <style>

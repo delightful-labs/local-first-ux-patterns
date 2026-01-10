@@ -1,46 +1,46 @@
-import { createActor } from 'xstate';
-import { toastMachine, type ToastContext } from '$lib/machines/toastMachine';
+import { createActor } from 'xstate'
+import { toastMachine, type ToastContext } from '$lib/machines/toastMachine'
 
 // Create a singleton actor for the toast machine
-let toastActorInstance: ReturnType<typeof createActor<typeof toastMachine>> | null = null;
+let toastActorInstance: ReturnType<typeof createActor<typeof toastMachine>> | null = null
 
 function getToastActor() {
 	if (!toastActorInstance) {
-		toastActorInstance = createActor(toastMachine);
-		toastActorInstance.start();
+		toastActorInstance = createActor(toastMachine)
+		toastActorInstance.start()
 	}
-	return toastActorInstance;
+	return toastActorInstance
 }
 
 /**
  * Add a toast notification
  */
 export function addToast(toast: ToastContext) {
-	const actor = getToastActor();
-	actor.send({ type: 'ADD_TOAST', toast });
+	const actor = getToastActor()
+	actor.send({ type: 'ADD_TOAST', toast })
 }
 
 /**
  * Remove a toast notification
  */
 export function removeToast(id: string) {
-	const actor = getToastActor();
-	actor.send({ type: 'REMOVE_TOAST', id });
+	const actor = getToastActor()
+	actor.send({ type: 'REMOVE_TOAST', id })
 }
 
 /**
  * Dismiss a toast notification
  */
 export function dismissToast(id: string) {
-	const actor = getToastActor();
-	actor.send({ type: 'DISMISS_TOAST', id });
+	const actor = getToastActor()
+	actor.send({ type: 'DISMISS_TOAST', id })
 }
 
 /**
  * Get the toast machine actor (for use in components)
  */
 export function getToastMachineActor() {
-	return getToastActor();
+	return getToastActor()
 }
 
 /**
@@ -52,32 +52,31 @@ export const toast = {
 			id: crypto.randomUUID(),
 			message,
 			type: 'success',
-			duration,
-		});
+			duration
+		})
 	},
 	error: (message: string, duration?: number) => {
 		addToast({
 			id: crypto.randomUUID(),
 			message,
 			type: 'error',
-			duration,
-		});
+			duration
+		})
 	},
 	info: (message: string, duration?: number) => {
 		addToast({
 			id: crypto.randomUUID(),
 			message,
 			type: 'info',
-			duration,
-		});
+			duration
+		})
 	},
 	warning: (message: string, duration?: number) => {
 		addToast({
 			id: crypto.randomUUID(),
 			message,
 			type: 'warning',
-			duration,
-		});
-	},
-};
-
+			duration
+		})
+	}
+}

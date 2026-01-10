@@ -1,48 +1,42 @@
 <script>
 	import { tick } from 'svelte'
-	import { toast } from '$lib/stores/toastStore';
+	import { toast } from '$lib/stores/toastStore'
+	import { faker } from '@faker-js/faker'
 
 	/**
 	 * @type {HTMLUListElement}
 	 */
 	let listElement
 
-	const transactionsTemplate = [
-		'Clothes',
-		'Rent',
-		'Food',
-		'Gas',
-		'Groceries',
-		'Fuel',
-		'Pet food',
-		'Toll',
-		'Fee',
-		'Groceries',
-		'Shoes',
-		'Socks'
-	]
+	function generateTransactions(count) {
+		return Array.from({ length: count }, () => faker.commerce.productName())
+	}
 
-	let transactions = $state(transactionsTemplate)
+	let transactions = $state(generateTransactions(12))
 
 	const addItems = async () => {
 		// 1. Save the current scroll position before the DOM updates
 		const currentScrollTop = listElement.scrollTop
 		const currentScrollHeight = listElement.scrollHeight
 
-		// 2. Prepend new items to the array
-		transactions = [...transactionsTemplate, ...transactions]
+		// 2. Generate a random number of items (1-9)
+		const newItemCount = faker.number.int({ min: 1, max: 9 })
+		const newItems = generateTransactions(newItemCount)
 
-		// 3. Wait for Svelte to update the DOM
+		// 3. Prepend new items to the array
+		transactions = [...newItems, ...transactions]
+
+		// 4. Wait for Svelte to update the DOM
 		await tick()
 
-		// 4. Calculate the difference in scroll height (the height of the new items)
+		// 5. Calculate the difference in scroll height (the height of the new items)
 		const newScrollHeight = listElement.scrollHeight
 		const addedHeight = newScrollHeight - currentScrollHeight
 
-		// 5. Restore the scroll position relative to the new content
+		// 6. Restore the scroll position relative to the new content
 		listElement.scrollTop = currentScrollTop + addedHeight
 
-		toast.success('New items loaded!');
+		toast.success('New items loaded!')
 	}
 </script>
 
