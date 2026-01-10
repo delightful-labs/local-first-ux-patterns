@@ -1,23 +1,23 @@
-import { setup, assign, fromPromise, raise } from 'xstate';
-import type { ActorRefFrom } from 'xstate';
+import { setup, assign, fromPromise, raise } from 'xstate'
+import type { ActorRefFrom } from 'xstate'
 
 // Types
 export interface ToastContext {
-	id: string;
-	message: string;
-	type?: 'success' | 'error' | 'info' | 'warning';
-	duration?: number;
+	id: string
+	message: string
+	type?: 'success' | 'error' | 'info' | 'warning'
+	duration?: number
 }
 
 export interface ToastMachineContext {
-	toasts: Map<string, ActorRefFrom<typeof toastChildMachine>>;
+	toasts: Map<string, ActorRefFrom<typeof toastChildMachine>>
 }
 
 export type ToastMachineEvents =
 	| { type: 'ADD_TOAST'; toast: ToastContext }
 	| { type: 'REMOVE_TOAST'; id: string }
 	| { type: 'DISMISS_TOAST'; id: string }
-	| { type: 'CHILD_STOPPED'; id: string };
+	| { type: 'CHILD_STOPPED'; id: string }
 
 // Child machine for individual toast
 export const toastChildMachine = setup({
@@ -28,14 +28,14 @@ export const toastChildMachine = setup({
 			| { type: 'DISMISS' }
 			| { type: 'TIMEOUT' }
 			| { type: 'HOVER' }
-			| { type: 'UNHOVER' },
+			| { type: 'UNHOVER' }
 	},
 	actors: {
 		toastTimer: fromPromise(async ({ input }: { input: number }) => {
-			await new Promise((resolve) => setTimeout(resolve, input));
-			return { done: true };
-		}),
-	},
+			await new Promise((resolve) => setTimeout(resolve, input))
+			return { done: true }
+		})
+	}
 }).createMachine({
 	id: 'toastChild',
 	initial: 'visible',
@@ -43,7 +43,7 @@ export const toastChildMachine = setup({
 		id: input.id,
 		message: input.message,
 		type: input.type ?? 'info',
-		duration: input.duration ?? 5000,
+		duration: input.duration ?? 5000
 	}),
 	states: {
 		visible: {
@@ -55,59 +55,59 @@ export const toastChildMachine = setup({
 						src: 'toastTimer',
 						input: ({ context }) => context.duration ?? 5000,
 						onDone: {
-							actions: raise({ type: 'TIMEOUT' }),
-						},
+							actions: raise({ type: 'TIMEOUT' })
+						}
 					},
 					on: {
 						HOVER: {
-							target: 'paused',
+							target: 'paused'
 						},
 						TIMEOUT: {
-							target: '#toastChild.hiding',
-						},
-					},
+							target: '#toastChild.hiding'
+						}
+					}
 				},
 				paused: {
 					on: {
 						UNHOVER: {
-							target: 'running',
-						},
-					},
-				},
+							target: 'running'
+						}
+					}
+				}
 			},
 			on: {
 				DISMISS: {
-					target: 'hiding',
-				},
-			},
+					target: 'hiding'
+				}
+			}
 		},
 		hiding: {
 			after: {
 				300: {
-					target: 'removed',
-				},
-			},
+					target: 'removed'
+				}
+			}
 		},
 		removed: {
-			type: 'final',
-		},
-	},
-});
+			type: 'final'
+		}
+	}
+})
 
 // Parent machine that manages multiple toasts
 export const toastMachine = setup({
 	types: {
 		context: {} as ToastMachineContext,
-		events: {} as ToastMachineEvents,
+		events: {} as ToastMachineEvents
 	},
 	actors: {
-		toastChild: toastChildMachine,
-	},
+		toastChild: toastChildMachine
+	}
 }).createMachine({
 	id: 'toastManager',
 	initial: 'active',
 	context: {
-		toasts: new Map(),
+		toasts: new Map()
 	},
 	states: {
 		active: {
@@ -116,58 +116,57 @@ export const toastMachine = setup({
 					actions: [
 						assign({
 							toasts: ({ context, event, spawn, self }) => {
-								const newToasts = new Map(context.toasts);
+								const newToasts = new Map(context.toasts)
 								const toastActor = spawn('toastChild', {
 									id: `toast-${event.toast.id}`,
-									input: event.toast,
-								});
+									input: event.toast
+								})
 
 								// Subscribe to the child machine to detect when it stops
 								toastActor.subscribe((state) => {
 									if (state.status === 'stopped') {
 										// Notify parent that child has stopped
-										self.send({ type: 'CHILD_STOPPED', id: event.toast.id });
+										self.send({ type: 'CHILD_STOPPED', id: event.toast.id })
 									}
-								});
+								})
 
-								newToasts.set(event.toast.id, toastActor);
-								return newToasts;
-							},
-						}),
-					],
+								newToasts.set(event.toast.id, toastActor)
+								return newToasts
+							}
+						})
+					]
 				},
 				CHILD_STOPPED: {
 					actions: assign({
 						toasts: ({ context, event }) => {
-							const newToasts = new Map(context.toasts);
-							newToasts.delete(event.id);
-							return newToasts;
-						},
-					}),
+							const newToasts = new Map(context.toasts)
+							newToasts.delete(event.id)
+							return newToasts
+						}
+					})
 				},
 				REMOVE_TOAST: {
 					actions: assign({
 						toasts: ({ context, event }) => {
-							const newToasts = new Map(context.toasts);
-							const toastActor = newToasts.get(event.id);
+							const newToasts = new Map(context.toasts)
+							const toastActor = newToasts.get(event.id)
 							if (toastActor) {
-								toastActor.stop();
-								newToasts.delete(event.id);
+								toastActor.stop()
+								newToasts.delete(event.id)
 							}
-							return newToasts;
-						},
-					}),
+							return newToasts
+						}
+					})
 				},
 				DISMISS_TOAST: {
 					actions: ({ context, event }) => {
-						const toastActor = context.toasts.get(event.id);
+						const toastActor = context.toasts.get(event.id)
 						if (toastActor) {
-							toastActor.send({ type: 'DISMISS' });
+							toastActor.send({ type: 'DISMISS' })
 						}
-					},
-				},
-			},
-		},
-	},
-});
-
+					}
+				}
+			}
+		}
+	}
+})
