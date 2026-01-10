@@ -1,7 +1,5 @@
 <script>
-	
+	import { FriendsList } from '$lib/components/FriendsList.svelte';
 </script>
 
-<div class="page">
-	<p>Messages</p>
-</div>
+<FriendsList />
