@@ -1,14 +1,15 @@
-<script>
-	import { faker } from '@faker-js/faker'
+<script lang="ts">
+	import type { Friend } from '$lib/data/friends'
 
-	const friends = Array.from({ length: 20 }, () => faker.person.fullName())
+	export let friends: Friend[] = []
 </script>
 
-
 <ul>
-    {#each friends as friend}
-        <li>{friend}</li>
-    {/each}
+	{#each friends as friend}
+		<li>
+			<a href={`/messages/${friend.id}`}>{friend.name}</a>
+		</li>
+	{/each}
 </ul>
 
 <style>
@@ -26,5 +27,16 @@
 
 	li:not(:last-child) {
 		border-bottom: 1px solid;
+	}
+
+	a {
+		color: inherit;
+		display: block;
+		width: 100%;
+	}
+
+	a:hover,
+	a:focus {
+		text-decoration: none;
 	}
 </style>

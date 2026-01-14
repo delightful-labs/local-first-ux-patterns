@@ -1,36 +1,64 @@
-<script>
-	import { faker } from '@faker-js/faker'
+<script lang="ts">
+	import type { Friend } from '$lib/data/friends'
 
-	const friends = Array.from({ length: 20 }, () => faker.lorem.sentence())
+	export let friend: Friend
 </script>
 
+<section class="messages">
+	<header class="messages-header">
+		<h2>{friend.name}</h2>
+	</header>
 
-<ul>
-    {#each friends as friend}
-        <li>{friend}</li>
-    {/each}
-</ul>
-
+	<ul>
+		{#each friend.messages as message (message.id)}
+			<li class:from-self={message.fromSelf} class:from-friend={!message.fromSelf}>
+				{message.body}
+			</li>
+		{/each}
+	</ul>
+</section>
 
 <style>
+	.messages {
+		display: flex;
+		flex-direction: column;
+		min-height: 100%;
+		border-left: 1px solid;
+	}
+
+	.messages-header {
+		padding: 1rem;
+		border-bottom: 1px solid;
+	}
+
+	h2 {
+		margin: 0;
+		font-size: 1.1rem;
+	}
+
 	ul {
 		list-style: none;
 		margin: 0;
-		padding: 0;
+		padding: 1rem;
 		display: grid;
 		gap: 1rem;
-		padding: 1rem;
 	}
 
 	li {
-		padding: 1rem;
+		padding: 0.75rem 1rem;
 		max-width: 40ch;
-		background-color: black;
-		color: white;
-		border-radius: 10px;
+		border-radius: 999px;
 	}
 
-	li:nth-child(odd) {
+	.from-self {
 		justify-self: end;
+		background-color: black;
+		color: white;
+	}
+
+	.from-friend {
+		justify-self: start;
+		background-color: #eee;
+		color: #111;
 	}
 </style>
