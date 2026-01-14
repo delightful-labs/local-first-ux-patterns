@@ -1,59 +1,58 @@
 <script lang="ts">
-	import type { ActorRefFrom } from 'xstate';
+	import type { ActorRefFrom } from 'xstate'
 	import type { toastChildMachine } from '$lib/machines/toastMachine'
-	import { browser } from '$app/environment';
+	import { browser } from '$app/environment'
 
 	interface Props {
-		actor: ActorRefFrom<typeof toastChildMachine>;
-		onDismiss?: () => void;
+		actor: ActorRefFrom<typeof toastChildMachine>
+		onDismiss?: () => void
 	}
 
-	let { actor, onDismiss }: Props = $props();
+	let { actor, onDismiss }: Props = $props()
 
-	let snapshot = $state(actor.getSnapshot());
+	let snapshot = $state(actor.getSnapshot())
 
 	if (browser) {
 		$effect(() => {
 			const unsubscribe = actor.subscribe((newSnapshot) => {
-				snapshot = newSnapshot;
-			});
-			return unsubscribe;
-		});
+				snapshot = newSnapshot
+			})
+			return unsubscribe
+		})
 	}
 
 	const handleDismiss = () => {
-		actor.send({ type: 'DISMISS' });
-		onDismiss?.();
-	};
+		actor.send({ type: 'DISMISS' })
+		onDismiss?.()
+	}
 
 	const handleMouseEnter = () => {
-		actor.send({ type: 'HOVER' });
-	};
+		actor.send({ type: 'HOVER' })
+	}
 
 	const handleMouseLeave = () => {
-		actor.send({ type: 'UNHOVER' });
-	};
+		actor.send({ type: 'UNHOVER' })
+	}
 
 	const getTypeStyles = (type: string) => {
 		switch (type) {
 			case 'success':
-				return 'toast-success';
+				return 'toast-success'
 			case 'error':
-				return 'toast-error';
+				return 'toast-error'
 			case 'warning':
-				return 'toast-warning';
+				return 'toast-warning'
 			default:
-				return 'toast-info';
+				return 'toast-info'
 		}
-	};
+	}
 
-	const currentState = $derived(snapshot?.value);
-	const context = $derived(snapshot?.context);
-	const isVisible = $derived(currentState === 'visible');
-	const isHiding = $derived(currentState === 'hiding');
+	const currentState = $derived(snapshot?.value)
+	const context = $derived(snapshot?.context)
+	const isHiding = $derived(currentState === 'hiding')
 	const toastClass = $derived(
 		context ? `toast ${getTypeStyles(context.type)} ${isHiding ? 'hiding' : ''}` : 'toast'
-	);
+	)
 </script>
 
 {#if currentState !== 'removed' && context}
@@ -67,9 +66,7 @@
 		<div class="toast-content">
 			<span class="toast-message">{context.message}</span>
 		</div>
-		<button class="toast-dismiss" onclick={handleDismiss} aria-label="Dismiss">
-			×
-		</button>
+		<button class="toast-dismiss" onclick={handleDismiss} aria-label="Dismiss"> × </button>
 	</li>
 {/if}
 
@@ -80,13 +77,15 @@
 		justify-content: space-between;
 		min-width: 300px;
 		max-width: 500px;
-		padding: 0.75rem 1rem;
-		box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+		padding: 1rem 1.5rem;
+		border: var(--border-width) solid black;
+		box-shadow: var(--box-shadow-3d);
 		background-color: white;
-		border-left: 4px solid;
 		opacity: 1;
 		transform: translateX(0);
-		transition: opacity 0.3s ease, transform 0.3s ease;
+		transition:
+			opacity 0.3s ease,
+			transform 0.3s ease;
 	}
 
 	.toast.hiding {
@@ -95,19 +94,20 @@
 	}
 
 	.toast-info {
-		border-left-color: #3b82f6;
+		border-left-color: var(--color-info);
 	}
 
 	.toast-success {
-		border-left-color: #10b981;
+		color: white;
+		background-color: var(--color-success);
 	}
 
 	.toast-error {
-		border-left-color: #ef4444;
+		border-left-color: var(--color-error);
 	}
 
 	.toast-warning {
-		border-left-color: #f59e0b;
+		border-left-color: var(--color-warning);
 	}
 
 	.toast-content {
@@ -122,7 +122,7 @@
 		cursor: pointer;
 		font-size: 1.5rem;
 		line-height: 1;
-		color: #6b7280;
+		color: inherit;
 		padding: 0;
 		margin-left: 0.75rem;
 		width: 1.5rem;
@@ -131,7 +131,9 @@
 		align-items: center;
 		justify-content: center;
 		border-radius: 0.25rem;
-		transition: background-color 0.2s ease, color 0.2s ease;
+		transition:
+			background-color 0.2s ease,
+			color 0.2s ease;
 	}
 
 	.toast-dismiss:hover {
@@ -144,4 +146,3 @@
 		outline-offset: 2px;
 	}
 </style>
-
