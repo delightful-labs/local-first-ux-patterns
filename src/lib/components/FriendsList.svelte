@@ -1,13 +1,48 @@
 <script lang="ts">
 	import type { Friend } from '$lib/data/friends'
+	import { friends as friendsStore } from '$lib/stores/friendsStore'
 
-	export let friends: Friend[] = []
+	let { friends: initialFriends = [] }: { friends?: Friend[] } = $props()
+
+	let storeFriends = $state(initialFriends)
+
+	$effect(() => {
+		const unsubscribe = friendsStore.subscribe((updatedFriends) => {
+			storeFriends = updatedFriends
+		})
+		return unsubscribe
+	})
+
+	const hasFailedMessages = (friend: Friend) => {
+		return friend.messages.some((msg) => msg.status === 'error-sending' && msg.fromSelf)
+	}
 </script>
 
 <ul>
-	{#each friends as friend}
+	{#each storeFriends as friend}
 		<li>
-			<a href={`/messages/${friend.id}`}>{friend.name}</a>
+			<a href={`/messages/${friend.id}`}>
+				<span>{friend.name}</span>
+				{#if hasFailedMessages(friend)}
+					<svg
+						class="error-icon"
+						width="16"
+						height="16"
+						viewBox="0 0 16 16"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+						aria-label="Failed messages"
+					>
+						<circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" />
+						<path
+							d="M8 4v4M8 10h.01"
+							stroke="currentColor"
+							stroke-width="1.5"
+							stroke-linecap="round"
+						/>
+					</svg>
+				{/if}
+			</a>
 		</li>
 	{/each}
 </ul>
@@ -31,12 +66,20 @@
 
 	a {
 		color: inherit;
-		display: block;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem;
 		width: 100%;
 	}
 
 	a:hover,
 	a:focus {
 		text-decoration: none;
+	}
+
+	.error-icon {
+		flex-shrink: 0;
+		color: var(--color-error, #dc2626);
 	}
 </style>
