@@ -1,0 +1,18 @@
+@font-face {
+	font-family: 'FlowBlock';
+	src: url('/fonts/FlowBlock-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+body {
+	--border-width: 4px;
+	font-family: monospace;
+	font-size: 20px;
+	--color-success: #10b981;
+	--color-error: #ef4444;
+	--color-warning: #f59e0b;
+	--color-info: #3b82f6;
+	--box-shadow-3d: 4px 0 0 0 black, 0 4px 0 0 black, 4px 4px 0 0 black;
+}

@@ -43,7 +43,7 @@ export const toastChildMachine = setup({
 		id: input.id,
 		message: input.message,
 		type: input.type ?? 'info',
-		duration: input.duration ?? 5000
+		duration: input.duration ?? 6000
 	}),
 	states: {
 		visible: {
