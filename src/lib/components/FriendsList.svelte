@@ -1,17 +1,6 @@
 <script lang="ts">
 	import type { Friend } from '$lib/data/friends'
-	import { friends as friendsStore } from '$lib/stores/friendsStore'
-
-	let { friends: initialFriends = [] }: { friends?: Friend[] } = $props()
-
-	let storeFriends = $state(initialFriends)
-
-	$effect(() => {
-		const unsubscribe = friendsStore.subscribe((updatedFriends) => {
-			storeFriends = updatedFriends
-		})
-		return unsubscribe
-	})
+	import { friends } from '$lib/stores/friendsStore'
 
 	const hasFailedMessages = (friend: Friend) => {
 		return friend.messages.some((msg) => msg.status === 'error-sending' && msg.fromSelf)
@@ -19,7 +8,7 @@
 </script>
 
 <ul>
-	{#each storeFriends as friend}
+	{#each $friends as friend}
 		<li>
 			<a href={`/messages/${friend.id}`}>
 				<span>{friend.name}</span>

@@ -1,14 +1,9 @@
 <script lang="ts">
 	import FriendsList from '$lib/components/FriendsList.svelte'
-	import type { Friend } from '$lib/data/friends'
-
-	export let data: {
-		friends: Friend[]
-	}
 </script>
 
 <div class="messages-layout">
-	<FriendsList friends={data.friends} />
+	<FriendsList />
 	<slot />
 </div>
 
