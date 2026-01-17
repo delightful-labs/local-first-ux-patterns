@@ -5,7 +5,6 @@ export function loadFromStorage<T>(key: string): T | null {
 
 	try {
 		const item = localStorage.getItem(key)
-		if (item) console.log('item', JSON.parse(item))
 		return item ? JSON.parse(item) : null
 	} catch {
 		return null
