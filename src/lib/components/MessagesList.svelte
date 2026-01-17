@@ -4,6 +4,7 @@
 	import { friends } from '$lib/stores/friendsStore'
 	import { browser } from '$app/environment'
 	import Button from './Button.svelte'
+	import WarningIcon from './WarningIcon.svelte'
 
 	let { friend }: { friend: Friend } = $props()
 
@@ -53,6 +54,7 @@
 
 	// Subscribe to friends store to update friend when messages change
 	let friendStore = $state(friend)
+	let messagesListRef: HTMLUListElement | null = $state(null)
 
 	// Update when friend prop changes (navigation)
 	$effect(() => {
@@ -70,10 +72,68 @@
 		return unsubscribe
 	})
 
+	// Auto-scroll to bottom when messages change or friend changes
+	$effect(() => {
+		if (messagesListRef && friendStore.messages) {
+			// Use requestAnimationFrame to ensure DOM is updated
+			requestAnimationFrame(() => {
+				if (messagesListRef) {
+					messagesListRef.scrollTop = messagesListRef.scrollHeight
+				}
+			})
+		}
+	})
+
 	const handleKeyDown = (e: KeyboardEvent) => {
 		if (e.key === 'Enter' && !e.shiftKey) {
 			e.preventDefault()
 			handleSend()
+		}
+	}
+
+	const dialogRefs = $state(new Map<string, HTMLDialogElement>())
+
+	const registerDialog = (node: HTMLDialogElement, messageId: string) => {
+		dialogRefs.set(messageId, node)
+		return {
+			destroy() {
+				dialogRefs.delete(messageId)
+			}
+		}
+	}
+
+	const handleRetry = (messageId: string) => {
+		const status = isDisconnected ? 'error-sending' : 'sent'
+		friends.update((friendsList) => {
+			return friendsList.map((f) => {
+				if (f.id === friend.id) {
+					return {
+						...f,
+						messages: f.messages.map((msg) => {
+							if (msg.id === messageId) {
+								return { ...msg, status }
+							}
+							return msg
+						})
+					}
+				}
+				return f
+			})
+		})
+		const dialog = dialogRefs.get(messageId)
+		dialog?.close()
+	}
+
+	const showDialog = (messageId: string) => {
+		const dialog = dialogRefs.get(messageId)
+		dialog?.showModal()
+	}
+
+	const handleDialogClick = (e: MouseEvent, messageId: string) => {
+		// Close dialog if clicking on the backdrop (the dialog element itself)
+		if (e.target === e.currentTarget) {
+			const dialog = dialogRefs.get(messageId)
+			dialog?.close()
 		}
 	}
 </script>
@@ -83,28 +143,26 @@
 		<h2>{friendStore.name}</h2>
 	</header>
 
-	<ul>
+	<ul bind:this={messagesListRef}>
 		{#each friendStore.messages as message (message.id)}
 			<li class:from-self={message.fromSelf} class:from-friend={!message.fromSelf}>
 				<span class="message-body">{message.body}</span>
 				{#if message.status === 'error-sending'}
-					<svg
-						class="error-icon"
-						width="16"
-						height="16"
-						viewBox="0 0 16 16"
-						fill="none"
-						xmlns="http://www.w3.org/2000/svg"
-						aria-label="Failed to send"
+					<button
+						class="error-icon-button"
+						onclick={() => showDialog(message.id)}
+						aria-label="Failed to send - click to retry"
 					>
-						<circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" />
-						<path
-							d="M8 4v4M8 10h.01"
-							stroke="currentColor"
-							stroke-width="1.5"
-							stroke-linecap="round"
-						/>
-					</svg>
+						<WarningIcon class="error-icon" />
+					</button>
+					<dialog
+						use:registerDialog={message.id}
+						class="retry-dialog"
+						onclick={(e) => handleDialogClick(e, message.id)}
+					>
+						<p>Message failed to send</p>
+						<Button onclick={() => handleRetry(message.id)}>Retry</Button>
+					</dialog>
 				{/if}
 			</li>
 		{/each}
@@ -126,12 +184,11 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 100%;
-		border-left: 1px solid;
 	}
 
 	.messages-header {
 		padding: 1rem;
-		border-bottom: 1px solid;
+		border-bottom: var(--border-width) solid;
 	}
 
 	h2 {
@@ -174,21 +231,49 @@
 		color: #111;
 	}
 
-	.error-icon {
+	.error-icon-button {
 		flex-shrink: 0;
+		background: none;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	:global(.error-icon) {
 		color: var(--color-error, #dc2626);
 	}
 
-	.from-self .error-icon {
+	.from-self :global(.error-icon) {
 		color: #ff6b6b;
+	}
+
+	.retry-dialog {
+		padding: 1rem;
+		background: white;
+		border: var(--border-width) solid black;
+		border-radius: 0.25rem;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		min-width: 200px;
+	}
+
+	.retry-dialog p {
+		margin: 0 0 0.75rem 0;
+		font-size: 0.875rem;
+	}
+
+	.retry-dialog::backdrop {
+		background: rgba(0, 0, 0, 0.1);
 	}
 
 	.message-input {
 		padding: 1rem;
-		border-top: 1px solid;
+		border-top: var(--border-width) solid;
 		display: flex;
 		gap: 0.5rem;
-		align-items: flex-end;
+		align-items: start;
 	}
 
 	.message-input textarea {

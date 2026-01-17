@@ -1,35 +1,29 @@
 <script lang="ts">
 	import type { Friend } from '$lib/data/friends'
 	import { friends } from '$lib/stores/friendsStore'
+	import { page } from '$app/stores'
+	import WarningIcon from './WarningIcon.svelte'
 
 	const hasFailedMessages = (friend: Friend) => {
 		return friend.messages.some((msg) => msg.status === 'error-sending' && msg.fromSelf)
+	}
+
+	const getFriendLink = (friendId: string) => {
+		const currentPath = $page.url.pathname
+		// Get the base path (either /messages/bad or /messages/good)
+		// Remove the friendId if present (path like /messages/bad/someId -> /messages/bad)
+		const basePath = currentPath.match(/^\/messages\/(bad|good)/)?.[0] || '/messages/bad'
+		return `${basePath}/${friendId}`
 	}
 </script>
 
 <ul>
 	{#each $friends as friend}
 		<li>
-			<a href={`/messages/${friend.id}`}>
+			<a href={getFriendLink(friend.id)}>
 				<span>{friend.name}</span>
 				{#if hasFailedMessages(friend)}
-					<svg
-						class="error-icon"
-						width="16"
-						height="16"
-						viewBox="0 0 16 16"
-						fill="none"
-						xmlns="http://www.w3.org/2000/svg"
-						aria-label="Failed messages"
-					>
-						<circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" />
-						<path
-							d="M8 4v4M8 10h.01"
-							stroke="currentColor"
-							stroke-width="1.5"
-							stroke-linecap="round"
-						/>
-					</svg>
+					<WarningIcon class="error-icon" aria-label="Failed messages" />
 				{/if}
 			</a>
 		</li>
@@ -42,7 +36,9 @@
 		margin: 0;
 		padding: 0;
 		display: grid;
-		border: 1px solid;
+		border-right: var(--border-width) solid;
+		overflow-y: auto;
+		height: 100%;
 	}
 
 	li {
@@ -50,7 +46,7 @@
 	}
 
 	li:not(:last-child) {
-		border-bottom: 1px solid;
+		border-bottom: var(--border-width) solid;
 	}
 
 	a {
@@ -67,7 +63,7 @@
 		text-decoration: none;
 	}
 
-	.error-icon {
+	:global(.error-icon) {
 		flex-shrink: 0;
 		color: var(--color-error, #dc2626);
 	}

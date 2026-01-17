@@ -1,9 +1,13 @@
 <script lang="ts">
 	import FriendsList from '$lib/components/FriendsList.svelte'
+	import Outbox from '$lib/components/Outbox.svelte'
 </script>
 
 <div class="messages-layout">
-	<FriendsList />
+	<div class="sidebar">
+		<Outbox />
+		<FriendsList />
+	</div>
 	<slot />
 </div>
 
@@ -11,6 +15,13 @@
 	.messages-layout {
 		display: grid;
 		grid-template-columns: minmax(200px, 1fr) 3fr;
-		min-height: 100%;
+		height: 100%;
+	}
+
+	.sidebar {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		overflow: hidden;
 	}
 </style>
