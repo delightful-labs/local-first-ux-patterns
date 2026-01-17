@@ -47,7 +47,12 @@
 	<SyncingDocumentsButton {unsyncedDocuments} />
 </div>
 <div class="list-wrapper">
-	<DocumentListWithSync {documents} showSyncStatus={true} allowClickUnsynced={false} basePath="/syncing-files/good" />
+	<DocumentListWithSync
+		{documents}
+		showSyncStatus={true}
+		allowClickUnsynced={false}
+		basePath="/syncing-files/good"
+	/>
 </div>
 
 <style>

@@ -40,7 +40,12 @@
 
 <h1>Syncing Files (Bad)</h1>
 <div class="list-wrapper">
-	<DocumentListWithSync {documents} showSyncStatus={false} allowClickUnsynced={true} basePath="/syncing-files/bad" />
+	<DocumentListWithSync
+		{documents}
+		showSyncStatus={false}
+		allowClickUnsynced={true}
+		basePath="/syncing-files/bad"
+	/>
 </div>
 
 <style>

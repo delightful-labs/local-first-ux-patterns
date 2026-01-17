@@ -10,7 +10,7 @@
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { browser } from '$app/environment'
-	
+
 	let { children } = $props()
 	import './styles.css'
 	import Header from '$lib/components/Header.svelte'
@@ -23,7 +23,7 @@
 		$effect(() => {
 			const currentPath = $page.url.pathname
 			const slide = getSlideFromPath(currentPath)
-			
+
 			if (slide) {
 				const currentSlide = navigationActor.getSnapshot().context.currentSlide
 				if (slide.example !== currentSlide.example || slide.view !== currentSlide.view) {
@@ -44,7 +44,7 @@
 				const currentSlide = newSnapshot.context.currentSlide
 				const path = slideToPath(currentSlide)
 				const currentPath = $page.url.pathname
-				
+
 				if (path !== currentPath) {
 					goto(path)
 				}

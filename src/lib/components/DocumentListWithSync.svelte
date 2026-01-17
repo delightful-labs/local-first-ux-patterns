@@ -8,7 +8,12 @@
 		basePath?: string
 	}
 
-	let { documents, showSyncStatus = false, allowClickUnsynced = true, basePath = '' }: Props = $props()
+	let {
+		documents,
+		showSyncStatus = false,
+		allowClickUnsynced = true,
+		basePath = ''
+	}: Props = $props()
 
 	const getSyncIcon = (status: Document['syncStatus']) => {
 		switch (status) {
