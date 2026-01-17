@@ -1,7 +1,7 @@
 import { setup, assign } from 'xstate'
 
 export type PresentationSlide = {
-	example: 'messages' | 'loading-lists' | 'syncing-files' | 'multiplayer'
+	example: 'root' | 'messages' | 'loading-lists' | 'syncing-files' | 'multiplayer'
 	view: 'landing' | 'bad' | 'good'
 }
 
@@ -15,6 +15,7 @@ export interface PresentationNavigationContext {
 }
 
 export const SLIDES: PresentationSlide[] = [
+	{ example: 'root', view: 'landing' },
 	{ example: 'messages', view: 'landing' },
 	{ example: 'messages', view: 'bad' },
 	{ example: 'messages', view: 'good' },
@@ -34,6 +35,11 @@ export function getSlideIndex(slide: PresentationSlide): number {
 }
 
 function parseSlideFromPath(path: string): PresentationSlide | null {
+	// Handle root path
+	if (path === '/' || path === '') {
+		return { example: 'root', view: 'landing' }
+	}
+
 	// Extract example and view from path like "/messages/bad" or "/messages"
 	const match = path.match(/\/([^/]+)(?:\/([^/]+))?/)
 	if (!match) return null
@@ -57,6 +63,9 @@ function parseSlideFromPath(path: string): PresentationSlide | null {
 }
 
 function buildPathFromSlide(slide: PresentationSlide): string {
+	if (slide.example === 'root') {
+		return '/'
+	}
 	if (slide.view === 'landing') {
 		return `/${slide.example}`
 	}

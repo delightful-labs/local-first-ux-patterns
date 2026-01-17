@@ -28,6 +28,10 @@
 	const canGoForward = $derived(currentSlideIndex >= 0 && currentSlideIndex < SLIDES.length - 1)
 	const shouldShowFooter = $derived(isPresentationSlide && (canGoBack || canGoForward))
 
+	const slideDisplayName = $derived(
+		currentSlide?.example === 'root' ? 'Home' : `${currentSlide?.example} / ${currentSlide?.view}`
+	)
+
 	function handleNext() {
 		if (canGoForward) {
 			actor.send({ type: 'NEXT' } satisfies PresentationNavigationEvents)
@@ -49,7 +53,7 @@
 			<div></div>
 		{/if}
 		<span class="slide-info">
-			{currentSlide?.example} / {currentSlide?.view}
+			{slideDisplayName}
 		</span>
 		{#if canGoForward}
 			<Button onclick={handleNext} aria-label="Next slide">Forward →</Button>
