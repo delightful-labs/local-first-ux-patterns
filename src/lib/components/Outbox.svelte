@@ -25,7 +25,7 @@
 
 	// Get all failed messages from all friends
 	let friendsList = $state<Friend[]>(get(friends))
-	
+
 	$effect(() => {
 		const unsubscribe = friends.subscribe((list) => {
 			friendsList = list
@@ -48,11 +48,11 @@
 
 		// Create a copy of failed messages to process
 		const messagesToRetry = [...failedMessages]
-		
+
 		// Process messages one at a time with a delay
 		for (let i = 0; i < messagesToRetry.length; i++) {
 			const { friend, message } = messagesToRetry[i]
-			
+
 			// Update this specific message
 			friends.update((friendsList) => {
 				return friendsList.map((f) => {
@@ -70,7 +70,7 @@
 					return f
 				})
 			})
-			
+
 			// Wait before processing the next message (except for the last one)
 			if (i < messagesToRetry.length - 1) {
 				await new Promise((resolve) => setTimeout(resolve, 300))
@@ -87,9 +87,7 @@
 				<span>Outbox</span>
 				<span class="count">({failedMessages.length})</span>
 			</div>
-			<Button onclick={handleRetryAll} disabled={!isConnected}>
-				Retry All
-			</Button>
+			<Button onclick={handleRetryAll} disabled={!isConnected}>Retry All</Button>
 		</header>
 		<ul class="outbox-messages">
 			{#each failedMessages as { friend, message }}
