@@ -26,7 +26,6 @@
 	const currentSlideIndex = $derived(currentSlide ? getSlideIndex(currentSlide) : -1)
 	const canGoBack = $derived(currentSlideIndex > 0)
 	const canGoForward = $derived(currentSlideIndex >= 0 && currentSlideIndex < SLIDES.length - 1)
-	const shouldShowFooter = $derived(isPresentationSlide && (canGoBack || canGoForward))
 
 	const slideDisplayName = $derived(
 		currentSlide?.example === 'root' ? 'Home' : `${currentSlide?.example} / ${currentSlide?.view}`
@@ -45,23 +44,21 @@
 	}
 </script>
 
-{#if shouldShowFooter}
-	<footer class="footer">
-		{#if canGoBack}
-			<Button onclick={handlePrev} aria-label="Previous slide">← Back</Button>
-		{:else}
-			<div></div>
-		{/if}
-		<span class="slide-info">
-			{slideDisplayName}
-		</span>
-		{#if canGoForward}
-			<Button onclick={handleNext} aria-label="Next slide">Forward →</Button>
-		{:else}
-			<div></div>
-		{/if}
-	</footer>
-{/if}
+<footer class="footer">
+	{#if canGoBack}
+		<Button onclick={handlePrev} aria-label="Previous slide">← Back</Button>
+	{:else}
+		<div></div>
+	{/if}
+	<span class="slide-info">
+		{slideDisplayName}
+	</span>
+	{#if canGoForward}
+		<Button onclick={handleNext} aria-label="Next slide">Forward →</Button>
+	{:else}
+		<div></div>
+	{/if}
+</footer>
 
 <style>
 	.footer {

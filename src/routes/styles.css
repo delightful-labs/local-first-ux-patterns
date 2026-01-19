@@ -6,13 +6,35 @@
 	font-display: swap;
 }
 
+@font-face {
+	font-family: 'Source Code Pro';
+	src: url('/fonts/SourceCodePro-VariableFont_wght.ttf') format('truetype');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Source Code Pro';
+	src: url('/fonts/SourceCodePro-Italic-VariableFont_wght.ttf') format('truetype');
+	font-weight: 100 900;
+	font-style: italic;
+	font-display: swap;
+}
+
 body {
 	--border-width: 4px;
-	font-family: monospace;
+	font-family: 'Source Code Pro', monospace;
 	font-size: 20px;
 	--color-success: #10b981;
 	--color-error: #ef4444;
 	--color-warning: #f59e0b;
 	--color-info: #3b82f6;
 	--box-shadow-3d: 4px 0 0 0 black, 0 4px 0 0 black, 4px 4px 0 0 black;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }

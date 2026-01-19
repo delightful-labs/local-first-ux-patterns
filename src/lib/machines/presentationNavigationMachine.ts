@@ -1,8 +1,8 @@
 import { setup, assign } from 'xstate'
 
 export type PresentationSlide = {
-	example: 'root' | 'messages' | 'loading-lists' | 'syncing-files' | 'multiplayer'
-	view: 'landing' | 'bad' | 'good'
+	example: 'root' | 'introduction' | 'messages' | 'loading-lists' | 'syncing-files' | 'multiplayer'
+	view: 'landing' | 'about-me' | 'problems' | 'bad' | 'good'
 }
 
 export type PresentationNavigationEvents =
@@ -16,6 +16,8 @@ export interface PresentationNavigationContext {
 
 export const SLIDES: PresentationSlide[] = [
 	{ example: 'root', view: 'landing' },
+	{ example: 'introduction', view: 'about-me' },
+	{ example: 'introduction', view: 'problems' },
 	{ example: 'messages', view: 'landing' },
 	{ example: 'messages', view: 'bad' },
 	{ example: 'messages', view: 'good' },
@@ -47,8 +49,16 @@ function parseSlideFromPath(path: string): PresentationSlide | null {
 	const [, example, view] = match
 	if (!example) return null
 
-	const validExamples = ['messages', 'loading-lists', 'syncing-files', 'multiplayer']
+	const validExamples = ['introduction', 'messages', 'loading-lists', 'syncing-files', 'multiplayer']
 	if (!validExamples.includes(example)) return null
+
+	// Handle introduction pages
+	if (example === 'introduction') {
+		if (view === 'about-me' || view === 'problems') {
+			return { example: 'introduction', view: view as 'about-me' | 'problems' }
+		}
+		return null
+	}
 
 	if (!view || view === example) {
 		return { example: example as PresentationSlide['example'], view: 'landing' }
@@ -65,6 +75,9 @@ function parseSlideFromPath(path: string): PresentationSlide | null {
 function buildPathFromSlide(slide: PresentationSlide): string {
 	if (slide.example === 'root') {
 		return '/'
+	}
+	if (slide.example === 'introduction') {
+		return `/${slide.example}/${slide.view}`
 	}
 	if (slide.view === 'landing') {
 		return `/${slide.example}`
