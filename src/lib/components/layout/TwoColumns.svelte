@@ -13,4 +13,36 @@
 		gap: 4rem;
 		height: 100%;
 	}
+
+	:global(.two-columns h2) {
+		font-size: 2.5rem;
+	}
+
+	:global(.two-columns .image-wrapper) {
+		height: 100%;
+		max-height: 100%;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	:global(.two-columns .image-wrapper img) {
+		height: auto;
+		max-height: 100%;
+		max-width: 100%;
+		width: auto;
+		display: block;
+	}
+
+	:global(.two-columns .text-wrapper) {
+		font-size: 2rem;
+	}
+
+	:global(.two-columns ul) {
+		padding-left: 2rem;
+		margin-top: 2rem;
+		display: grid;
+		gap: 1rem;
+	}
 </style>

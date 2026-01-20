@@ -1,8 +1,8 @@
 import { setup, assign } from 'xstate'
 
 export type PresentationSlide = {
-	example: 'root' | 'introduction' | 'messages' | 'loading-lists' | 'syncing-files' | 'multiplayer'
-	view: 'landing' | 'about-me' | 'problems' | 'bad' | 'good'
+	example: 'root' | 'introduction' | 'messages' | 'loading-lists' | 'syncing-files' | 'multiplayer' | 'conclusion'
+	view: 'landing' | 'about-me' | 'problems' | 'bad' | 'good' | 'takeaway-1' | 'takeaway-2' | 'thank-you'
 }
 
 export type PresentationNavigationEvents =
@@ -29,7 +29,10 @@ export const SLIDES: PresentationSlide[] = [
 	{ example: 'syncing-files', view: 'good' },
 	{ example: 'multiplayer', view: 'landing' },
 	{ example: 'multiplayer', view: 'bad' },
-	{ example: 'multiplayer', view: 'good' }
+	{ example: 'multiplayer', view: 'good' },
+	{ example: 'conclusion', view: 'takeaway-1' },
+	{ example: 'conclusion', view: 'takeaway-2' },
+	{ example: 'conclusion', view: 'thank-you' }
 ]
 
 export function getSlideIndex(slide: PresentationSlide): number {
@@ -49,13 +52,21 @@ function parseSlideFromPath(path: string): PresentationSlide | null {
 	const [, example, view] = match
 	if (!example) return null
 
-	const validExamples = ['introduction', 'messages', 'loading-lists', 'syncing-files', 'multiplayer']
+	const validExamples = ['introduction', 'messages', 'loading-lists', 'syncing-files', 'multiplayer', 'conclusion']
 	if (!validExamples.includes(example)) return null
 
 	// Handle introduction pages
 	if (example === 'introduction') {
 		if (view === 'about-me' || view === 'problems') {
 			return { example: 'introduction', view: view as 'about-me' | 'problems' }
+		}
+		return null
+	}
+
+	// Handle conclusion pages
+	if (example === 'conclusion') {
+		if (view === 'takeaway-1' || view === 'takeaway-2' || view === 'thank-you') {
+			return { example: 'conclusion', view: view as 'takeaway-1' | 'takeaway-2' | 'thank-you' }
 		}
 		return null
 	}
@@ -76,7 +87,7 @@ function buildPathFromSlide(slide: PresentationSlide): string {
 	if (slide.example === 'root') {
 		return '/'
 	}
-	if (slide.example === 'introduction') {
+	if (slide.example === 'introduction' || slide.example === 'conclusion') {
 		return `/${slide.example}/${slide.view}`
 	}
 	if (slide.view === 'landing') {
