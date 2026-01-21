@@ -10,6 +10,7 @@
 			<li>Downloaded content not really available offline</li>
 			<li>Not knowing if content is available offline or has been synced to the server</li>
 		</ul>
+		<p>These apps have offline features, <strong>but they are local-last</strong></p>
 	</div>
 	<div slot="right" class="image-wrapper">
 		<img
@@ -18,3 +19,9 @@
 		/>
 	</div>
 </TwoColumns>
+
+<style>
+	p {
+		margin-top: 2rem;
+	}
+</style>

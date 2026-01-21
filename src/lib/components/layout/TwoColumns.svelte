@@ -13,6 +13,7 @@
 		align-items: center;
 		gap: 4rem;
 		height: 100%;
+		line-height: 1.5;
 	}
 
 	:global(.two-columns h2) {
