@@ -183,6 +183,8 @@
 	ul {
 		padding: 0;
 		margin: 0;
+		overflow-y: auto;
+		border-left: var(--border-width) solid;
 	}
 
 	li {

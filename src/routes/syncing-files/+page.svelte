@@ -1,13 +1,11 @@
-<div class="landing-page">
-	<h1>Syncing Files Example</h1>
-	<p>This example demonstrates file syncing patterns.</p>
-</div>
+<script>
+	import OneColumn from '$lib/components/layout/OneColumn.svelte'
+</script>
 
-<style>
-	.landing-page {
-		padding: 2rem;
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-</style>
+<OneColumn>
+	<h1>Syncing to and from remote</h1>
+	<p>
+		If an app allows partial loading of remote data, how do we communicate what is and what is not
+		available offline?
+	</p>
+</OneColumn>

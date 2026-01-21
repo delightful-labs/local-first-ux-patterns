@@ -1,13 +1,11 @@
-<div class="landing-page">
-	<h1>Loading Lists Example</h1>
-	<p>This example demonstrates loading list patterns.</p>
-</div>
+<script>
+	import OneColumn from '$lib/components/layout/OneColumn.svelte'
+</script>
 
-<style>
-	.landing-page {
-		padding: 2rem;
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-</style>
+<OneColumn>
+	<h1>Loading new content</h1>
+	<p>
+		When the network connection is restored, how do we replace stale data without disorienting the
+		user?
+	</p>
+</OneColumn>

@@ -4,6 +4,7 @@
 	import { browser } from '$app/environment'
 	import DocumentListWithSync from '$lib/components/DocumentListWithSync.svelte'
 	import { setupSlowSyncing } from '$lib/utils/syncingUtils'
+	import DocumentListWrapper from '$lib/components/DocumentListWrapper.svelte'
 
 	const filesActor = getSyncingFilesActor()
 	const networkActor = getNetworkStatusActor()
@@ -38,33 +39,12 @@
 	})
 </script>
 
-<h1>Syncing Files (Bad)</h1>
-<div class="list-wrapper">
+<DocumentListWrapper>
 	<DocumentListWithSync
+		slot="list"
 		{documents}
 		showSyncStatus={false}
 		allowClickUnsynced={true}
 		basePath="/syncing-files/bad"
 	/>
-</div>
-
-<style>
-	h1 {
-		margin: 0 0 2rem 0;
-		font-size: 1.5rem;
-		padding: 2rem 2rem 0 2rem;
-		max-width: 600px;
-		margin-left: auto;
-		margin-right: auto;
-	}
-
-	.list-wrapper {
-		box-sizing: border-box;
-		height: calc(100svh - 8rem);
-		display: flex;
-		flex-direction: column;
-		padding: 2rem;
-		max-width: 600px;
-		margin: 0 auto;
-	}
-</style>
+</DocumentListWrapper>

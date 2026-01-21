@@ -8,6 +8,19 @@
 		margin: 0 auto;
 		padding-block: 4rem;
 		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	:global(.one-column h1) {
+		font-size: 4rem;
+	}
+
+	:global(.one-column p) {
+		font-size: 2.5rem;
+		margin-top: 2rem;
+		line-height: 1.5;
 	}
 
 	:global(.one-column h2) {

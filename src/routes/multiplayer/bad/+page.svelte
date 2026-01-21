@@ -38,16 +38,4 @@
 	})
 </script>
 
-<h1>Multiplayer Form (Bad)</h1>
 <MultiplayerForm {fields} {formActor} showEditInfo={false} />
-
-<style>
-	h1 {
-		margin: 0 0 2rem 0;
-		font-size: 1.5rem;
-		padding: 2rem 2rem 0 2rem;
-		max-width: 600px;
-		margin-left: auto;
-		margin-right: auto;
-	}
-</style>

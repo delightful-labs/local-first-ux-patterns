@@ -4,6 +4,7 @@
 	import { toast } from '$lib/stores/toastStore'
 	import { faker } from '@faker-js/faker'
 	import { browser } from '$app/environment'
+	import DocumentListWrapper from '$lib/components/DocumentListWrapper.svelte'
 
 	/**
 	 * @type {HTMLDivElement}
@@ -53,23 +54,15 @@
 	}
 </script>
 
-<div class="list-wrapper">
-	<div bind:this={listElement}>
+<DocumentListWrapper>
+	<div bind:this={listElement} slot="list">
 		<DocumentList {documents} />
 	</div>
-</div>
+</DocumentListWrapper>
 
 <style>
-	.list-wrapper {
-		box-sizing: border-box;
-		height: 100svh;
-		display: flex;
-		flex-direction: column;
-		padding: 2rem;
-	}
-
 	div {
-		outline: var(--border-width) solid;
+		border-left: var(--border-width) solid;
 		flex: 1 auto;
 		overflow-y: auto;
 	}

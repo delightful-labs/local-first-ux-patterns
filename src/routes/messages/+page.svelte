@@ -1,13 +1,11 @@
-<div class="landing-page">
-	<h1>Messages Example</h1>
-	<p>This example demonstrates messaging patterns with friends.</p>
-</div>
+<script>
+	import OneColumn from '$lib/components/layout/OneColumn.svelte'
+</script>
 
-<style>
-	.landing-page {
-		padding: 2rem;
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-</style>
+<OneColumn>
+	<h1>Uncompleted tasks</h1>
+	<p>
+		If actions cannot be completed because of limited or no network connection, how can they know
+		which actions haven’t been completed and retry them?
+	</p>
+</OneColumn>
