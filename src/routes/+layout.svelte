@@ -204,6 +204,7 @@
 			}
 
 			window.addEventListener('mousemove', handleMouseMove)
+			window.addEventListener('mousemove', handleMouseMove)
 			return () => {
 				window.removeEventListener('mousemove', handleMouseMove)
 				if (rafId !== null) {

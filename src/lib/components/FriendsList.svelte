@@ -56,6 +56,7 @@
 		justify-content: space-between;
 		gap: 0.5rem;
 		width: 100%;
+		font-weight: 700;
 	}
 
 	a:hover,

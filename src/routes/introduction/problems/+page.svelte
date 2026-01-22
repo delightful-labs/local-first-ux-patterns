@@ -4,7 +4,7 @@
 
 <TwoColumns>
 	<div slot="left" class="text-wrapper">
-		<h2>A lot of apps aren't designed for when you have no network access</h2>
+		<h2>A lot of apps are not designed for when you have no network access</h2>
 		<ul>
 			<li>Not handling lie-fi</li>
 			<li>Downloaded content not really available offline</li>

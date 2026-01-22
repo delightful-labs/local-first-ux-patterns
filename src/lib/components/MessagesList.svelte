@@ -4,7 +4,7 @@
 	import { friends } from '$lib/stores/friendsStore'
 	import { browser } from '$app/environment'
 	import Button from './Button.svelte'
-	import WarningIcon from './WarningIcon.svelte'
+	import RetryButton from './RetryButton.svelte'
 
 	let { friend }: { friend: Friend } = $props()
 
@@ -91,17 +91,6 @@
 		}
 	}
 
-	const dialogRefs = $state(new Map<string, HTMLDialogElement>())
-
-	const registerDialog = (node: HTMLDialogElement, messageId: string) => {
-		dialogRefs.set(messageId, node)
-		return {
-			destroy() {
-				dialogRefs.delete(messageId)
-			}
-		}
-	}
-
 	const handleRetry = (messageId: string) => {
 		const status = isDisconnected ? 'error-sending' : 'sent'
 		friends.update((friendsList) => {
@@ -120,21 +109,6 @@
 				return f
 			})
 		})
-		const dialog = dialogRefs.get(messageId)
-		dialog?.close()
-	}
-
-	const showDialog = (messageId: string) => {
-		const dialog = dialogRefs.get(messageId)
-		dialog?.showModal()
-	}
-
-	const handleDialogClick = (e: MouseEvent, messageId: string) => {
-		// Close dialog if clicking on the backdrop (the dialog element itself)
-		if (e.target === e.currentTarget) {
-			const dialog = dialogRefs.get(messageId)
-			dialog?.close()
-		}
 	}
 </script>
 
@@ -148,21 +122,11 @@
 			<li class:from-self={message.fromSelf} class:from-friend={!message.fromSelf}>
 				<span class="message-body">{message.body}</span>
 				{#if message.status === 'error-sending'}
-					<button
-						class="error-icon-button"
-						onclick={() => showDialog(message.id)}
-						aria-label="Failed to send - click to retry"
-					>
-						<WarningIcon class="error-icon" />
-					</button>
-					<dialog
-						use:registerDialog={message.id}
-						class="retry-dialog"
-						onclick={(e) => handleDialogClick(e, message.id)}
-					>
-						<p>Message failed to send</p>
-						<Button onclick={() => handleRetry(message.id)}>Retry</Button>
-					</dialog>
+					<RetryButton
+						messageId={message.id}
+						message="Message failed to send"
+						onRetry={() => handleRetry(message.id)}
+					/>
 				{/if}
 			</li>
 		{/each}
@@ -193,7 +157,7 @@
 
 	h2 {
 		margin: 0;
-		font-size: 1.1rem;
+		font-size: 1.5rem;
 	}
 
 	ul {
@@ -204,10 +168,11 @@
 		gap: 1rem;
 		flex: 1;
 		overflow-y: auto;
+		align-items: end;
 	}
 
 	li {
-		padding: 0.75rem 1rem;
+		padding: 0.75rem 2rem;
 		max-width: 40ch;
 		border-radius: 999px;
 		display: flex;
@@ -231,48 +196,24 @@
 		color: #111;
 	}
 
-	.error-icon-button {
-		flex-shrink: 0;
-		background: none;
-		border: none;
-		padding: 0;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
 	:global(.error-icon) {
 		color: var(--color-error, #dc2626);
+		height: 32px;
+		width: 32px;
+		background-color: white;
+		border-radius: 50%;
+		padding: 2px;
 	}
 
 	.from-self :global(.error-icon) {
 		color: #ff6b6b;
 	}
 
-	.retry-dialog {
-		padding: 1rem;
-		background: white;
-		border: var(--border-width) solid black;
-		border-radius: 0.25rem;
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-		min-width: 200px;
-	}
-
-	.retry-dialog p {
-		margin: 0 0 0.75rem 0;
-		font-size: 0.875rem;
-	}
-
-	.retry-dialog::backdrop {
-		background: rgba(0, 0, 0, 0.1);
-	}
-
 	.message-input {
-		padding: 1rem;
+		padding: 2rem;
 		border-top: var(--border-width) solid;
 		display: flex;
-		gap: 0.5rem;
+		gap: 1rem;
 		align-items: start;
 	}
 
@@ -283,8 +224,7 @@
 		border: var(--border-width) solid black;
 		border-radius: 0;
 		resize: vertical;
-		min-height: 2.5rem;
-		max-height: 8rem;
+		height: 3.4rem;
 	}
 
 	.message-input textarea:focus {
