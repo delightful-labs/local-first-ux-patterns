@@ -8,6 +8,7 @@
 		max-width: 120ch;
 		margin: 0 auto;
 		padding-block: 4rem;
+		padding-inline: 2rem;
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		align-items: center;

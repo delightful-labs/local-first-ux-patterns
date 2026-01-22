@@ -7,6 +7,7 @@
 		max-width: 100ch;
 		margin: 0 auto;
 		padding-block: 4rem;
+		padding-inline: 2rem;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
