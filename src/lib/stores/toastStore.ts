@@ -37,6 +37,26 @@ export function dismissToast(id: string) {
 }
 
 /**
+ * Clear all toast notifications
+ */
+export function clearAllToasts() {
+	const actor = getToastActor()
+	actor.send({ type: 'CLEAR_ALL' })
+}
+
+/**
+ * Dismiss all toast notifications (with animation)
+ */
+export function dismissAllToasts() {
+	const actor = getToastActor()
+	const snapshot = actor.getSnapshot()
+	// Dismiss each toast individually to trigger the hide animation
+	for (const toastId of snapshot.context.toasts.keys()) {
+		actor.send({ type: 'DISMISS_TOAST', id: toastId })
+	}
+}
+
+/**
  * Get the toast machine actor (for use in components)
  */
 export function getToastMachineActor() {

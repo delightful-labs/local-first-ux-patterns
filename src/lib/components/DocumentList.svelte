@@ -30,6 +30,11 @@
 		}
 	}
 
+	li:hover {
+		background-color: black;
+		color: white;
+	}
+
 	li:last-child {
 		border-bottom: 0;
 	}

@@ -76,11 +76,7 @@
 		}
 	}}
 ></div>
-<dialog
-	bind:this={dialogRef}
-	class="retry-dialog"
-	onclick={handleDialogClick}
->
+<dialog bind:this={dialogRef} class="retry-dialog" onclick={handleDialogClick}>
 	<p>{message}</p>
 	<Button onclick={handleRetry}>Retry</Button>
 </dialog>

@@ -18,6 +18,7 @@ export type ToastMachineEvents =
 	| { type: 'REMOVE_TOAST'; id: string }
 	| { type: 'DISMISS_TOAST'; id: string }
 	| { type: 'CHILD_STOPPED'; id: string }
+	| { type: 'CLEAR_ALL' }
 
 // Child machine for individual toast
 export const toastChildMachine = setup({
@@ -165,6 +166,18 @@ export const toastMachine = setup({
 							toastActor.send({ type: 'DISMISS' })
 						}
 					}
+				},
+				CLEAR_ALL: {
+					actions: assign({
+						toasts: ({ context }) => {
+							// Stop all toast actors
+							for (const toastActor of context.toasts.values()) {
+								toastActor.stop()
+							}
+							// Return empty map
+							return new Map()
+						}
+					})
 				}
 			}
 		}

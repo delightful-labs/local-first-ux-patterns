@@ -1,4 +1,5 @@
 import { setup, assign } from 'xstate'
+import { dismissAllToasts } from '$lib/stores/toastStore'
 
 export type PresentationSlide = {
 	example: 'root' | 'introduction' | 'messages' | 'loading-lists' | 'syncing-files' | 'multiplayer' | 'conclusion'
@@ -111,27 +112,36 @@ export const presentationNavigationMachine = setup({
 		active: {
 			on: {
 				NEXT: {
-					actions: assign(({ context }) => {
-						const currentIndex = getSlideIndex(context.currentSlide)
-						if (currentIndex < SLIDES.length - 1) {
-							return { currentSlide: SLIDES[currentIndex + 1] }
-						}
-						return {}
-					})
+					actions: [
+						() => dismissAllToasts(),
+						assign(({ context }) => {
+							const currentIndex = getSlideIndex(context.currentSlide)
+							if (currentIndex < SLIDES.length - 1) {
+								return { currentSlide: SLIDES[currentIndex + 1] }
+							}
+							return {}
+						})
+					]
 				},
 				PREV: {
-					actions: assign(({ context }) => {
-						const currentIndex = getSlideIndex(context.currentSlide)
-						if (currentIndex > 0) {
-							return { currentSlide: SLIDES[currentIndex - 1] }
-						}
-						return {}
-					})
+					actions: [
+						() => dismissAllToasts(),
+						assign(({ context }) => {
+							const currentIndex = getSlideIndex(context.currentSlide)
+							if (currentIndex > 0) {
+								return { currentSlide: SLIDES[currentIndex - 1] }
+							}
+							return {}
+						})
+					]
 				},
 				GO_TO: {
-					actions: assign(({ event }) => {
-						return { currentSlide: event.slide }
-					})
+					actions: [
+						() => dismissAllToasts(),
+						assign(({ event }) => {
+							return { currentSlide: event.slide }
+						})
+					]
 				}
 			}
 		}
