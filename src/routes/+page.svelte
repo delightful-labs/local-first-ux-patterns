@@ -2,6 +2,21 @@
 	import { browser } from '$app/environment'
 	import { friends } from '$lib/stores/friendsStore'
 	import { friends as initialFriends } from '$lib/data/friends'
+	import HiddenButton from '$lib/components/HiddenButton.svelte'
+
+	function toggleFullscreen() {
+		if (!browser) return
+
+		if (!document.fullscreenElement) {
+			document.documentElement.requestFullscreen().catch((err) => {
+				console.error('Error attempting to enable fullscreen:', err)
+			})
+		} else {
+			document.exitFullscreen().catch((err) => {
+				console.error('Error attempting to exit fullscreen:', err)
+			})
+		}
+	}
 
 	function clearAllStorage() {
 		if (!browser) return
@@ -14,9 +29,13 @@
 	}
 </script>
 
-<button class="clear-storage-button" on:click={clearAllStorage}>
+<HiddenButton onclick={toggleFullscreen} aria-label="Toggle fullscreen">
+	Toggle fullscreen
+</HiddenButton>
+
+<HiddenButton onclick={clearAllStorage} aria-label="Clear local storage and reset messages">
 	Clear local storage and reset messages
-</button>
+</HiddenButton>
 
 <div class="page">
 	<h1 class="title">Designing for Local-First</h1>
@@ -26,46 +45,6 @@
 </div>
 
 <style>
-	.clear-storage-button {
-		/* Visually hidden but accessible */
-		position: absolute;
-		left: -9999px;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip: rect(0, 0, 0, 0);
-		white-space: nowrap;
-		border: 0;
-		padding: 0;
-		margin: 0;
-	}
-
-	.clear-storage-button:focus {
-		/* Show when focused (tab navigation) */
-		position: fixed;
-		top: 1rem;
-		left: 1rem;
-		z-index: 9999;
-		width: auto;
-		height: auto;
-		overflow: visible;
-		clip: auto;
-		white-space: normal;
-		padding: 0.75rem 1.5rem;
-		background: black;
-		color: white;
-		border: 2px solid white;
-		border-radius: 0.25rem;
-		font-size: 1rem;
-		font-weight: 600;
-		cursor: pointer;
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-	}
-
-	.clear-storage-button:focus:hover {
-		background: #333;
-	}
-
 	.page {
 		display: flex;
 		flex-direction: column;
