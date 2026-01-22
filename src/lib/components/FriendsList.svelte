@@ -36,7 +36,6 @@
 		margin: 0;
 		padding: 0;
 		display: grid;
-		border-right: var(--border-width) solid;
 		overflow-y: auto;
 		height: 100%;
 	}

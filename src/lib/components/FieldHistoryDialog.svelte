@@ -37,7 +37,7 @@
 	const historyWithCurrent = $derived(() => {
 		if (!field) return []
 		const entries: (FieldHistoryEntry & { isCurrent: boolean; originalIndex?: number })[] = []
-		
+
 		// Add current value as the first entry
 		if (field.value) {
 			entries.push({
@@ -47,7 +47,7 @@
 				isCurrent: true
 			})
 		}
-		
+
 		// Add history entries in reverse order (newest previous value first)
 		// Store original index so we can revert correctly
 		if (field.history && field.history.length > 0) {
@@ -59,7 +59,7 @@
 				})
 			}
 		}
-		
+
 		return entries
 	})
 </script>
@@ -80,9 +80,7 @@
 						</div>
 					</div>
 					{#if !entry.isCurrent && entry.originalIndex !== undefined}
-						<Button onclick={() => handleRevert(entry.originalIndex!)}>
-							Revert
-						</Button>
+						<Button onclick={() => handleRevert(entry.originalIndex!)}>Revert</Button>
 					{/if}
 				</div>
 			{/each}
@@ -112,7 +110,7 @@
 	}
 
 	.history-entry.current {
-		background-color: #f0f9ff;
+		background-color: white;
 		border-color: #4a90e2;
 	}
 
@@ -133,7 +131,6 @@
 		align-items: center;
 		gap: 0.75rem;
 		font-size: 0.875rem;
-		color: #666;
 	}
 
 	.history-editor {

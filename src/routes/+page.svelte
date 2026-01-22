@@ -52,9 +52,9 @@
 		clip: auto;
 		white-space: normal;
 		padding: 0.75rem 1.5rem;
-		background: #000;
-		color: #fff;
-		border: 2px solid #fff;
+		background: black;
+		color: white;
+		border: 2px solid white;
 		border-radius: 0.25rem;
 		font-size: 1rem;
 		font-weight: 600;

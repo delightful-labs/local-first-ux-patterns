@@ -26,9 +26,9 @@ body {
 	--border-width: 4px;
 	font-family: 'Source Code Pro', monospace;
 	font-size: 20px;
-	--color-success: #10b981;
+	--color-success: #059669;
 	--color-error: #ef4444;
-	--color-warning: #f59e0b;
+	--color-warning: #d97706;
 	--color-info: #3b82f6;
 	--box-shadow-3d: 4px 0 0 0 black, 0 4px 0 0 black, 4px 4px 0 0 black;
 }

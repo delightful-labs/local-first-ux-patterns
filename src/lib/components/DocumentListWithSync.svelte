@@ -195,7 +195,7 @@
 
 	li.disabled h3,
 	li.disabled p {
-		opacity: 0.5;
+		color: #666;
 	}
 
 	a {

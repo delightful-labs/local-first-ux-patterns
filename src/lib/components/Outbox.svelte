@@ -84,11 +84,12 @@
 		<header class="outbox-header">
 			<div class="outbox-title">
 				<WarningIcon class="error-icon" />
-				<span>Outbox</span>
+				<h3>Outbox</h3>
 				<span class="count">({failedMessages.length})</span>
 			</div>
 			<Button onclick={handleRetryAll} disabled={!isConnected}>Retry All</Button>
 		</header>
+		<p>These messages were not able to be sent.</p>
 		<ul class="outbox-messages">
 			{#each failedMessages as { friend, message }}
 				<li>
@@ -104,10 +105,12 @@
 	.outbox {
 		border-bottom: var(--border-width) solid;
 		background-color: #fff3cd;
+		padding: 1rem;
+		display: grid;
+		gap: 1rem;
 	}
 
 	.outbox-header {
-		padding: 1rem;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -134,7 +137,6 @@
 	.outbox-messages {
 		list-style: none;
 		margin: 0;
-		padding: 0 1rem 1rem 1rem;
 		display: grid;
 		gap: 0.5rem;
 		max-height: 200px;

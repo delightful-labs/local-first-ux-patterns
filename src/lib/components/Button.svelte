@@ -24,7 +24,7 @@
 		border: var(--border-width) solid black;
 		border-radius: 0;
 		background-color: white;
-		color: #333;
+		color: black;
 		cursor: pointer;
 		box-shadow: var(--box-shadow-3d);
 		transition:

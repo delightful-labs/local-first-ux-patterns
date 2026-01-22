@@ -64,8 +64,12 @@
 									Edited by {field.lastEditedBy} at {formatTime(field.lastEditedAt)}
 								</span>
 							{/if}
-							{#if showHistory && (field.history && field.history.length > 0 || field.lastEditedBy)}
-								<button type="button" class="history-link" onclick={(e) => openHistoryDialog(field, e)}>
+							{#if showHistory && ((field.history && field.history.length > 0) || field.lastEditedBy)}
+								<button
+									type="button"
+									class="history-link"
+									onclick={(e) => openHistoryDialog(field, e)}
+								>
 									View history
 								</button>
 							{/if}
@@ -86,17 +90,13 @@
 </div>
 
 {#if showHistory}
-	<FieldHistoryDialog
-		bind:open={historyDialogOpen}
-		field={selectedField}
-		onRevert={handleRevert}
-	/>
+	<FieldHistoryDialog bind:open={historyDialogOpen} field={selectedField} onRevert={handleRevert} />
 {/if}
 
 <style>
 	.form-container {
 		padding: 2rem;
-		max-width: 600px;
+		max-width: 80ch;
 		margin: 0 auto;
 	}
 
@@ -130,7 +130,6 @@
 
 	.edit-info {
 		font-size: 0.75rem;
-		color: #666;
 		font-style: italic;
 	}
 
@@ -140,13 +139,14 @@
 		padding: 0;
 		cursor: pointer;
 		font-size: 0.75rem;
-		color: #4a90e2;
+		color: #0066cc;
 		text-decoration: underline;
 		font-style: italic;
 	}
 
 	.history-link:hover {
-		color: #2563eb;
+		color: #0052a3;
+		text-decoration: none;
 	}
 
 	input {

@@ -74,7 +74,6 @@
 	.slide-info {
 		font-family: monospace;
 		font-size: 0.9em;
-		color: #666;
 		flex: 1;
 		text-align: center;
 	}

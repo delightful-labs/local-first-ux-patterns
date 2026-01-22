@@ -148,6 +148,7 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 100%;
+		border-left: var(--border-width) solid;
 	}
 
 	.messages-header {
@@ -193,7 +194,7 @@
 	.from-friend {
 		justify-self: start;
 		background-color: #eee;
-		color: #111;
+		color: black;
 	}
 
 	:global(.error-icon) {
