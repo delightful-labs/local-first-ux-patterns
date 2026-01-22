@@ -10,10 +10,37 @@
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { browser } from '$app/environment'
+	import HiddenButton from '$lib/components/HiddenButton.svelte'
+	import { friends } from '$lib/stores/friendsStore'
+	import { friends as initialFriends } from '$lib/data/friends'
 
 	let { children } = $props()
 	import './styles.css'
 	import Header from '$lib/components/Header.svelte'
+
+	function toggleFullscreen() {
+		if (!browser) return
+
+		if (!document.fullscreenElement) {
+			document.documentElement.requestFullscreen().catch((err) => {
+				console.error('Error attempting to enable fullscreen:', err)
+			})
+		} else {
+			document.exitFullscreen().catch((err) => {
+				console.error('Error attempting to exit fullscreen:', err)
+			})
+		}
+	}
+
+	function clearAllStorage() {
+		if (!browser) return
+
+		// Clear all localStorage
+		localStorage.clear()
+
+		// Reset friends store to initial state
+		friends.set(initialFriends)
+	}
 
 	if (browser) {
 		const navigationActor = getPresentationNavigationActor()
@@ -218,6 +245,14 @@
 <svelte:head>
 	<link rel="icon" href={favicon} />
 </svelte:head>
+
+<HiddenButton onclick={toggleFullscreen} aria-label="Toggle fullscreen">
+	Toggle fullscreen
+</HiddenButton>
+
+<HiddenButton onclick={clearAllStorage} aria-label="Clear local storage and reset messages">
+	Clear local storage and reset messages
+</HiddenButton>
 
 <main>
 	<Header />
