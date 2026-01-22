@@ -38,4 +38,4 @@
 	})
 </script>
 
-<MultiplayerForm {fields} {formActor} showEditInfo={true} />
+<MultiplayerForm {fields} {formActor} showEditInfo={true} showHistory={true} />

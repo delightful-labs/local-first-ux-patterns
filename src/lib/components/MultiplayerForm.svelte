@@ -2,14 +2,19 @@
 	import type { FormField } from '$lib/machines/formMachine'
 	import type { ActorRefFrom } from 'xstate'
 	import type { formMachine } from '$lib/machines/formMachine'
+	import FieldHistoryDialog from './FieldHistoryDialog.svelte'
 
 	interface Props {
 		fields: FormField[]
 		formActor: ActorRefFrom<typeof formMachine>
 		showEditInfo?: boolean
+		showHistory?: boolean
 	}
 
-	let { fields, formActor, showEditInfo = false }: Props = $props()
+	let { fields, formActor, showEditInfo = false, showHistory = false }: Props = $props()
+
+	let selectedField: FormField | null = $state(null)
+	let historyDialogOpen = $state(false)
 
 	const handleFieldChange = (fieldId: string, value: string) => {
 		formActor.send({
@@ -27,6 +32,23 @@
 			second: '2-digit'
 		}).format(date)
 	}
+
+	function openHistoryDialog(field: FormField, e?: MouseEvent) {
+		if (e) {
+			e.preventDefault()
+			e.stopPropagation()
+		}
+		selectedField = field
+		historyDialogOpen = true
+	}
+
+	function handleRevert(fieldId: string, historyIndex: number) {
+		formActor.send({
+			type: 'REVERT_FIELD',
+			fieldId,
+			historyIndex
+		})
+	}
 </script>
 
 <div class="form-container">
@@ -36,11 +58,18 @@
 				{#if showEditInfo}
 					<div class="field-header">
 						<label for={field.id}>{field.label}</label>
-						{#if field.lastEditedBy && field.lastEditedAt}
-							<span class="edit-info">
-								Edited by {field.lastEditedBy} at {formatTime(field.lastEditedAt)}
-							</span>
-						{/if}
+						<div class="edit-info-container">
+							{#if field.lastEditedBy && field.lastEditedAt}
+								<span class="edit-info">
+									Edited by {field.lastEditedBy} at {formatTime(field.lastEditedAt)}
+								</span>
+							{/if}
+							{#if showHistory && (field.history && field.history.length > 0 || field.lastEditedBy)}
+								<button type="button" class="history-link" onclick={(e) => openHistoryDialog(field, e)}>
+									View history
+								</button>
+							{/if}
+						</div>
 					</div>
 				{:else}
 					<label for={field.id}>{field.label}</label>
@@ -55,6 +84,14 @@
 		{/each}
 	</form>
 </div>
+
+{#if showHistory}
+	<FieldHistoryDialog
+		bind:open={historyDialogOpen}
+		field={selectedField}
+		onRevert={handleRevert}
+	/>
+{/if}
 
 <style>
 	.form-container {
@@ -84,10 +121,32 @@
 		font-weight: 600;
 	}
 
+	.edit-info-container {
+		display: flex;
+		align-items: baseline;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+
 	.edit-info {
 		font-size: 0.75rem;
 		color: #666;
 		font-style: italic;
+	}
+
+	.history-link {
+		background: none;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		font-size: 0.75rem;
+		color: #4a90e2;
+		text-decoration: underline;
+		font-style: italic;
+	}
+
+	.history-link:hover {
+		color: #2563eb;
 	}
 
 	input {
