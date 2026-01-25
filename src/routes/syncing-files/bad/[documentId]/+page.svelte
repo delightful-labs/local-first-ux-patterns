@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { getSyncingFilesActor } from '$lib/stores/syncingFilesStore'
 	import { browser } from '$app/environment'
+	import { page } from '$app/stores'
 
 	let { data }: { data: { documentId: string } } = $props()
+
+	const backPath = $derived($page.url.pathname.replace(/\/[^/]+$/, ''))
 
 	const filesActor = getSyncingFilesActor()
 
@@ -25,6 +28,10 @@
 	const displayDocument = $derived(document?.syncStatus === 'synced' ? document : null)
 	const showError = $derived(document !== null && document.syncStatus !== 'synced')
 </script>
+
+<nav class="back-link">
+	<a href={backPath}>← Back to list</a>
+</nav>
 
 {#if displayDocument}
 	<article>
@@ -72,5 +79,22 @@
 		margin: 0;
 		font-size: 1.5rem;
 		color: var(--color-error, #ef4444);
+	}
+
+	.back-link {
+		padding: 1rem 2rem;
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	.back-link a {
+		color: inherit;
+		text-decoration: none;
+		font-weight: 700;
+	}
+
+	.back-link a:hover,
+	.back-link a:focus {
+		text-decoration: underline;
 	}
 </style>

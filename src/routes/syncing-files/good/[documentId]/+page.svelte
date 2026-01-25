@@ -3,8 +3,11 @@
 	import { getSyncingFilesActor } from '$lib/stores/syncingFilesStore'
 	import { browser } from '$app/environment'
 	import { goto } from '$app/navigation'
+	import { page } from '$app/stores'
 
 	let { data }: { data: { documentId: string } } = $props()
+
+	const backPath = $derived($page.url.pathname.replace(/\/[^/]+$/, ''))
 
 	const filesActor = getSyncingFilesActor()
 
@@ -31,4 +34,27 @@
 	})
 </script>
 
+<nav class="back-link">
+	<a href={backPath}>← Back to list</a>
+</nav>
+
 <DocumentDetail {document} />
+
+<style>
+	.back-link {
+		padding: 1rem 2rem;
+		max-width: 800px;
+		margin: 0 auto;
+	}
+
+	.back-link a {
+		color: inherit;
+		text-decoration: none;
+		font-weight: 700;
+	}
+
+	.back-link a:hover,
+	.back-link a:focus {
+		text-decoration: underline;
+	}
+</style>
