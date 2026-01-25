@@ -23,8 +23,13 @@ export type SyncingFilesMachineEvents =
 // Generate initial documents with faker - mix of synced and pending
 function generateDocuments(count: number): Document[] {
 	return Array.from({ length: count }, (_, index) => {
-		// First item is always pending, then alternate
-		const syncStatus: SyncStatus = index === 0 ? 'pending' : index % 2 === 0 ? 'pending' : 'synced'
+		// First item is always unsynced (pending), then alternate
+		let syncStatus: SyncStatus
+		if (index === 0) {
+			syncStatus = 'pending'
+		} else {
+			syncStatus = index % 2 === 0 ? 'pending' : 'synced'
+		}
 		return {
 			id: faker.string.uuid(),
 			title: faker.lorem.sentence({ min: 1, max: 4 }),
