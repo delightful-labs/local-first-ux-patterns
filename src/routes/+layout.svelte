@@ -125,6 +125,17 @@
 				} else if (e.key === 'ArrowLeft') {
 					e.preventDefault()
 					navigationActor.send({ type: 'PREV' } satisfies PresentationNavigationEvents)
+				} else if (e.key === 'x' || e.key === 'X') {
+					e.preventDefault()
+					const networkState = networkActor.getSnapshot().value
+					if (networkState === 'connected') {
+						networkActor.send({ type: 'DISCONNECT' } satisfies NetworkStatusMachineEvents)
+					} else if (networkState === 'disconnected') {
+						// Use 3000ms delay for loading-lists pages, default 800ms for others
+						const currentPath = $page.url.pathname
+						const delay = currentPath.startsWith('/loading-lists/') ? 3000 : undefined
+						networkActor.send({ type: 'CONNECT', delay } satisfies NetworkStatusMachineEvents)
+					}
 				}
 			}
 
