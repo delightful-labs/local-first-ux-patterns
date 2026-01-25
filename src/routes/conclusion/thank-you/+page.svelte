@@ -8,7 +8,7 @@
 		<div class="presentation-link">
 			<span
 				><strong>Slides:</strong>
-				<a href="https://fossdem-2026.delightfullabs.com">https://fossdem-2026.delightfullabs.com</a
+				<a href="https://fosdem-2026.delightfullabs.com">https://fosdem-2026.delightfullabs.com</a
 				></span
 			>
 			<img src="/images/qr-code.svg" alt="QR Code" />
