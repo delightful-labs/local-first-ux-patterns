@@ -7,18 +7,18 @@
 	.two-columns {
 		max-width: 120ch;
 		margin: 0 auto;
-		padding-block: 4rem;
-		padding-inline: 2rem;
+		padding: 2rem;
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: 3fr 2fr;
 		align-items: center;
 		gap: 4rem;
 		height: 100%;
-		line-height: 1.5;
+		line-height: 1.4;
 	}
 
 	:global(.two-columns h2) {
 		font-size: 2.5rem;
+		line-height: 1.2;
 	}
 
 	:global(.two-columns .image-wrapper) {

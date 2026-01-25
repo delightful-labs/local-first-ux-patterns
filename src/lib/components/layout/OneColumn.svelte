@@ -4,18 +4,18 @@
 
 <style>
 	.one-column {
-		max-width: 100ch;
+		max-width: 120ch;
 		margin: 0 auto;
-		padding-block: 4rem;
-		padding-inline: 2rem;
+		padding: 2rem;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+		align-items: center;
 	}
 
 	:global(.one-column h1) {
-		font-size: 4rem;
+		font-size: 3.5rem;
 	}
 
 	:global(.one-column p) {
@@ -25,7 +25,7 @@
 	}
 
 	:global(.one-column h2) {
-		font-size: 5rem;
+		font-size: 4.5rem;
 		text-align: center;
 	}
 
@@ -37,7 +37,7 @@
 
 	:global(.one-column ul) {
 		padding-left: 2rem;
-		font-size: 2.5rem;
+		font-size: 2rem;
 		margin-top: 4rem;
 		display: grid;
 		gap: 1rem;
