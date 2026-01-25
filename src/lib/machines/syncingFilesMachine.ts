@@ -19,6 +19,7 @@ export type SyncingFilesMachineEvents =
 	| { type: 'GO_OFFLINE' }
 	| { type: 'DOCUMENT_SYNCED'; documentId: string }
 	| { type: 'START_SYNCING' }
+	| { type: 'RESET' }
 
 // Generate initial documents with faker - mix of synced and pending
 function generateDocuments(count: number): Document[] {
@@ -61,6 +62,12 @@ export const syncingFilesMachine = setup({
 								doc.syncStatus === 'pending' ? { ...doc, syncStatus: 'syncing' as SyncStatus } : doc
 							)
 					})
+				},
+				RESET: {
+					target: 'offline',
+					actions: assign({
+						documents: () => generateDocuments(8)
+					})
 				}
 			}
 		},
@@ -82,6 +89,12 @@ export const syncingFilesMachine = setup({
 								doc.syncStatus === 'syncing' ? { ...doc, syncStatus: 'pending' as SyncStatus } : doc
 							)
 					})
+				},
+				RESET: {
+					target: 'offline',
+					actions: assign({
+						documents: () => generateDocuments(8)
+					})
 				}
 			},
 			always: {
@@ -93,6 +106,12 @@ export const syncingFilesMachine = setup({
 			on: {
 				GO_OFFLINE: {
 					target: 'offline'
+				},
+				RESET: {
+					target: 'offline',
+					actions: assign({
+						documents: () => generateDocuments(8)
+					})
 				}
 			}
 		}

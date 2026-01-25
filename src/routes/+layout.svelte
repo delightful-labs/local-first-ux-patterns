@@ -7,6 +7,8 @@
 	import { getNetworkStatusActor } from '$lib/stores/networkStatusStore'
 	import type { NetworkStatusMachineEvents } from '$lib/machines/networkStatusMachine'
 	import type { PresentationNavigationEvents } from '$lib/machines/presentationNavigationMachine'
+	import { getSyncingFilesActor } from '$lib/stores/syncingFilesStore'
+	import type { SyncingFilesMachineEvents } from '$lib/machines/syncingFilesMachine'
 	import { goto } from '$app/navigation'
 	import { page } from '$app/stores'
 	import { browser } from '$app/environment'
@@ -40,6 +42,10 @@
 
 		// Reset friends store to initial state
 		friends.set(initialFriends)
+
+		// Reset syncing files data
+		const syncingFilesActor = getSyncingFilesActor()
+		syncingFilesActor.send({ type: 'RESET' } satisfies SyncingFilesMachineEvents)
 	}
 
 	if (browser) {
