@@ -52,6 +52,14 @@
 		const navigationActor = getPresentationNavigationActor()
 		const networkActor = getNetworkStatusActor()
 
+		// Reset storage when landing on home page
+		$effect(() => {
+			const currentPath = $page.url.pathname
+			if (currentPath === '/') {
+				clearAllStorage()
+			}
+		})
+
 		// Sync navigation state with URL changes
 		$effect(() => {
 			const currentPath = $page.url.pathname
