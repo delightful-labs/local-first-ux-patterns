@@ -3,6 +3,7 @@
 	import { getNetworkStatusActor } from '$lib/stores/networkStatusStore'
 	import type { NetworkStatusMachineEvents } from '$lib/machines/networkStatusMachine'
 	import { browser } from '$app/environment'
+	import { page } from '$app/stores'
 
 	const actor = getNetworkStatusActor()
 	let snapshot = $state(actor.getSnapshot())
@@ -21,7 +22,10 @@
 	const isConnected = $derived(currentState === 'connected')
 
 	const handleConnect = () => {
-		actor.send({ type: 'CONNECT' } satisfies NetworkStatusMachineEvents)
+		// Use 3000ms delay for loading-lists pages, default 800ms for others
+		const currentPath = $page.url.pathname
+		const delay = currentPath.startsWith('/loading-lists/') ? 3000 : undefined
+		actor.send({ type: 'CONNECT', delay } satisfies NetworkStatusMachineEvents)
 	}
 
 	const handleDisconnect = () => {
