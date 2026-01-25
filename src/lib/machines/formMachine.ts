@@ -29,13 +29,14 @@ export type FormMachineEvents =
 export const formMachine = setup({
 	types: {
 		context: {} as FormMachineContext,
-		events: {} as FormMachineEvents
+		events: {} as FormMachineEvents,
+		input: {} as { initialFields?: FormField[] }
 	}
 }).createMachine({
 	id: 'form',
 	initial: 'editing',
-	context: {
-		fields: [
+	context: ({ input }) => ({
+		fields: input?.initialFields || [
 			{ id: 'name', label: 'Name', value: faker.person.fullName() },
 			{ id: 'email', label: 'Email', value: faker.internet.email() },
 			{ id: 'phone', label: 'Phone', value: faker.phone.number() },
@@ -46,7 +47,7 @@ export const formMachine = setup({
 			}
 		],
 		currentUser: 'You'
-	},
+	}),
 	states: {
 		editing: {
 			on: {

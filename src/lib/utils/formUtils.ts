@@ -25,13 +25,19 @@ export function generateFieldValue(fieldId: string): string {
  */
 export function setupRemoteEdits(
 	formActor: ActorRefFrom<typeof formMachine>,
-	networkSnapshot: { value: string } | null,
+	networkActor: { getSnapshot: () => { value: string } },
 	previousNetworkState: 'disconnected' | 'connecting' | 'connected'
 ): 'disconnected' | 'connecting' | 'connected' {
-	const currentState = networkSnapshot?.value as 'disconnected' | 'connecting' | 'connected'
+	const currentState = networkActor.getSnapshot().value as 'disconnected' | 'connecting' | 'connected'
 	if (previousNetworkState !== 'connected' && currentState === 'connected') {
 		// Simulate another user editing fields after a short delay
 		setTimeout(() => {
+			// Check network status at the time the timeout fires
+			const networkState = networkActor.getSnapshot().value as 'disconnected' | 'connecting' | 'connected'
+			if (networkState !== 'connected') {
+				return // Don't update if network is not connected
+			}
+
 			const fieldsToUpdate = ['name', 'email', 'phone', 'address']
 			const randomField = fieldsToUpdate[Math.floor(Math.random() * fieldsToUpdate.length)]
 			const randomValue = generateFieldValue(randomField)
@@ -48,6 +54,12 @@ export function setupRemoteEdits(
 
 		// Update another field after a longer delay
 		setTimeout(() => {
+			// Check network status at the time the timeout fires
+			const networkState = networkActor.getSnapshot().value as 'disconnected' | 'connecting' | 'connected'
+			if (networkState !== 'connected') {
+				return // Don't update if network is not connected
+			}
+
 			const fieldsToUpdate = ['name', 'email', 'phone', 'address']
 			const randomField = fieldsToUpdate[Math.floor(Math.random() * fieldsToUpdate.length)]
 			const randomValue = generateFieldValue(randomField)

@@ -5,8 +5,22 @@
 	import { browser } from '$app/environment'
 	import MultiplayerForm from '$lib/components/MultiplayerForm.svelte'
 	import { setupRemoteEdits } from '$lib/utils/formUtils'
+	import { faker } from '@faker-js/faker'
 
-	const formActor = createActor(formMachine)
+	const formActor = createActor(formMachine, {
+		input: {
+			initialFields: [
+				{ id: 'name', label: 'Name', value: faker.person.fullName() },
+				{ id: 'email', label: 'Email', value: faker.internet.email() },
+				{ id: 'phone', label: 'Phone', value: faker.phone.number() },
+				{
+					id: 'address',
+					label: 'Address',
+					value: faker.location.streetAddress({ useFullAddress: true })
+				}
+			]
+		}
+	})
 	formActor.start()
 	const networkActor = getNetworkStatusActor()
 
@@ -34,7 +48,9 @@
 	let previousNetworkState = $state<'disconnected' | 'connecting' | 'connected'>('disconnected')
 
 	$effect(() => {
-		previousNetworkState = setupRemoteEdits(formActor, networkSnapshot, previousNetworkState)
+		// Track networkSnapshot to ensure effect re-runs when network state changes
+		const currentNetworkSnapshot = networkSnapshot
+		previousNetworkState = setupRemoteEdits(formActor, networkActor, previousNetworkState)
 	})
 </script>
 
