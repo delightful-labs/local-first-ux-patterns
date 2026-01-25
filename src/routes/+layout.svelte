@@ -20,6 +20,15 @@
 	import './styles.css'
 	import Header from '$lib/components/Header.svelte'
 
+	function resetFocus() {
+		if (!browser) return
+		
+		// Blur the currently active element to reset focus
+		if (document.activeElement instanceof HTMLElement) {
+			document.activeElement.blur()
+		}
+	}
+
 	function toggleFullscreen() {
 		if (!browser) return
 
@@ -32,6 +41,8 @@
 				console.error('Error attempting to exit fullscreen:', err)
 			})
 		}
+		
+		resetFocus()
 	}
 
 	function clearAllStorage() {
@@ -46,6 +57,8 @@
 		// Reset syncing files data
 		const syncingFilesActor = getSyncingFilesActor()
 		syncingFilesActor.send({ type: 'RESET' } satisfies SyncingFilesMachineEvents)
+		
+		resetFocus()
 	}
 
 	if (browser) {

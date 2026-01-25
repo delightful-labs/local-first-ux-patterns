@@ -55,10 +55,13 @@
 	// Subscribe to friends store to update friend when messages change
 	let friendStore = $state(friend)
 	let messagesListRef: HTMLUListElement | null = $state(null)
+	let textareaRef: HTMLTextAreaElement | null = $state(null)
 
 	// Update when friend prop changes (navigation)
 	$effect(() => {
 		friendStore = friend
+		// Clear message text when switching friends
+		messageText = ''
 	})
 
 	// Update when store changes (new messages)
@@ -84,10 +87,54 @@
 		}
 	})
 
+	// Focus textarea on mount and when friend changes
+	$effect(() => {
+		// Track friend.id so effect re-runs when friend changes
+		const friendId = friend.id
+		
+		if (textareaRef && browser) {
+			// Use requestAnimationFrame to ensure DOM is ready
+			requestAnimationFrame(() => {
+				if (textareaRef) {
+					textareaRef.focus()
+				}
+			})
+		}
+	})
+
 	const handleKeyDown = (e: KeyboardEvent) => {
 		if (e.key === 'Enter' && !e.shiftKey) {
 			e.preventDefault()
 			handleSend()
+		} else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+			// Allow arrow keys to bubble up for navigation when cursor is at boundary or textarea is empty
+			if (textareaRef) {
+				const cursorPos = textareaRef.selectionStart
+				const textLength = textareaRef.value.length
+				const isEmpty = textLength === 0
+				
+				// If textarea is empty, or ArrowLeft and cursor is at start, or ArrowRight and cursor is at end,
+				// prevent default, blur the textarea, and dispatch a new event for navigation
+				if (
+					isEmpty ||
+					(e.key === 'ArrowLeft' && cursorPos === 0) ||
+					(e.key === 'ArrowRight' && cursorPos === textLength)
+				) {
+					e.preventDefault()
+					textareaRef.blur()
+					// Dispatch a new event on the window so the layout handler can catch it
+					// Use a small timeout to ensure blur happens first
+					setTimeout(() => {
+						const navEvent = new KeyboardEvent('keydown', {
+							key: e.key,
+							code: e.code,
+							bubbles: true,
+							cancelable: true
+						})
+						window.dispatchEvent(navEvent)
+					}, 0)
+				}
+			}
 		}
 	}
 
@@ -134,6 +181,7 @@
 
 	<div class="message-input">
 		<textarea
+			bind:this={textareaRef}
 			bind:value={messageText}
 			onkeydown={handleKeyDown}
 			placeholder="Type a message..."
