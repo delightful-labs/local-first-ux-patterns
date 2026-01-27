@@ -152,6 +152,16 @@
 			let mouseX = 0
 			let mouseY = 0
 
+			// Re-assert cursor: none when returning to the window (browser often resets it)
+			function hideNativeCursor() {
+				document.documentElement.style.setProperty('cursor', 'none', 'important')
+				document.body.style.setProperty('cursor', 'none', 'important')
+			}
+
+			hideNativeCursor()
+			window.addEventListener('focus', hideNativeCursor)
+			document.documentElement.addEventListener('mouseenter', hideNativeCursor)
+
 			function getComputedCursor(element: Element | null): string {
 				if (!element) return 'default'
 
@@ -270,6 +280,8 @@
 
 			window.addEventListener('mousemove', handleMouseMove)
 			return () => {
+				window.removeEventListener('focus', hideNativeCursor)
+				document.documentElement.removeEventListener('mouseenter', hideNativeCursor)
 				window.removeEventListener('mousemove', handleMouseMove)
 				if (rafId !== null) {
 					cancelAnimationFrame(rafId)
