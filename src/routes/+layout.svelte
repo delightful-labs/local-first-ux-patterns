@@ -345,6 +345,15 @@
 		cursor: none !important;
 	}
 
+	/* Links get cursor: pointer from UA; override explicitly so native cursor never shows */
+	:global(a),
+	:global(a:hover),
+	:global(a:focus),
+	:global(a:active),
+	:global(a:visited) {
+		cursor: none !important;
+	}
+
 	/* WebKit overlay scrollbars can show native cursor when hovered */
 	:global(*::-webkit-scrollbar),
 	:global(*::-webkit-scrollbar-thumb),
