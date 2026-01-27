@@ -38,7 +38,6 @@
 
 	.summary {
 		padding: 0.75rem 1rem;
-		cursor: pointer;
 		user-select: none;
 		font-weight: 500;
 	}

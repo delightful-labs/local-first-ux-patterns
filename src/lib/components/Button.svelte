@@ -25,7 +25,6 @@
 		border-radius: 0;
 		background-color: white;
 		color: black;
-		cursor: pointer;
 		box-shadow: var(--box-shadow-3d);
 		transition:
 			background-color 0.2s,
@@ -46,7 +45,6 @@
 
 	.button:disabled {
 		opacity: 0.5;
-		cursor: not-allowed;
 	}
 
 	.button:focus-visible {

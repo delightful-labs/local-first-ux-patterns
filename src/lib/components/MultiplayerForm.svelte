@@ -137,7 +137,6 @@
 		background: none;
 		border: none;
 		padding: 0;
-		cursor: pointer;
 		font-size: 0.75rem;
 		color: #0066cc;
 		text-decoration: underline;

@@ -203,7 +203,6 @@
 		padding: 2rem;
 		color: inherit;
 		text-decoration: none;
-		cursor: pointer;
 	}
 
 	a:hover {
@@ -212,7 +211,6 @@
 
 	li.disabled > div {
 		padding: 2rem;
-		cursor: default;
 	}
 
 	.document-header {
@@ -239,7 +237,6 @@
 		display: inline-block;
 		min-width: 40px;
 		text-align: center;
-		cursor: pointer;
 		user-select: none;
 		line-height: 1;
 	}

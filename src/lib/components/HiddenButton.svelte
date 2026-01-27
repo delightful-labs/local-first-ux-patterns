@@ -44,7 +44,6 @@
 		border-radius: 0.25rem;
 		font-size: 1rem;
 		font-weight: 600;
-		cursor: pointer;
 		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 	}
 

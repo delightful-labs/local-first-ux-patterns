@@ -119,7 +119,6 @@
 	.toast-dismiss {
 		background: none;
 		border: none;
-		cursor: pointer;
 		font-size: 1.5rem;
 		line-height: 1;
 		color: inherit;
