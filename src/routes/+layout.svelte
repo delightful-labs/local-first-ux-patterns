@@ -269,7 +269,6 @@
 			}
 
 			window.addEventListener('mousemove', handleMouseMove)
-			window.addEventListener('mousemove', handleMouseMove)
 			return () => {
 				window.removeEventListener('mousemove', handleMouseMove)
 				if (rafId !== null) {
@@ -315,10 +314,29 @@
 		overflow-y: auto;
 	}
 
-	/* Custom cursor styles */
+	/* Custom cursor styles – hide native cursor everywhere to avoid flicker */
+	:global(:root),
 	:global(html),
 	:global(body),
-	:global(*) {
+	:global(*),
+	:global(*::before),
+	:global(*::after),
+	:global(::backdrop) {
+		cursor: none !important;
+	}
+
+	/* Form controls and editable regions often bypass * in some browsers */
+	:global(input),
+	:global(textarea),
+	:global(select),
+	:global([contenteditable='true']) {
+		cursor: none !important;
+	}
+
+	/* WebKit overlay scrollbars can show native cursor when hovered */
+	:global(*::-webkit-scrollbar),
+	:global(*::-webkit-scrollbar-thumb),
+	:global(*::-webkit-scrollbar-track) {
 		cursor: none !important;
 	}
 
@@ -327,6 +345,7 @@
 		width: 58px;
 		height: 64px;
 		pointer-events: none;
+		cursor: none !important;
 		background: url('/images/pointer.svg') no-repeat center center;
 		background-size: contain;
 		z-index: 9999;
